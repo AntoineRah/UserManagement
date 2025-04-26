@@ -7,6 +7,7 @@ import { ProtectedRoute } from './routes/ProtectedRoute';
 import { Cardcontainer } from './components/organisms/Cardcontainer';
 import { CreateUser } from './components/molecules/CreateUser';
 
+
 function App() {
 
 
@@ -15,8 +16,8 @@ function App() {
       <Route path='/login' element={<AuthRoute><Login /></AuthRoute>} />
       <Route path='/' element={<Navigate to="/dashboard" replace />} />
       <Route path='/dashboard' element={<ProtectedRoute><Dashboard /></ProtectedRoute>}>
-        <Route index element={<Cardcontainer />} />
-        <Route path='new' element={<CreateUser />} />
+        <Route index element={<ProtectedRoute><Cardcontainer /></ProtectedRoute>} />
+        <Route path='new' element={<ProtectedRoute><CreateUser /></ProtectedRoute>} />
       </Route>
     </Routes>
   )

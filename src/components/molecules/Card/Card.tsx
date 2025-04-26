@@ -1,9 +1,35 @@
 import { CardProps } from "./Card.type";
 import { Button, ButtonVariant } from "../../atoms/Button";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { useAuthStore } from "../../../stores/useAuthStore";
+
 
 export const Card = ({ firstName, lastName, id, status, email, dateOfBirth }: CardProps) => {
-
+  const accessToken = useAuthStore((state) => state.accessToken);
   const initials = `${(firstName?.[0] || '').toUpperCase()}${(lastName?.[0] || '').toUpperCase()}`;
+  const queryClient = useQueryClient()
+  const DeleteUser = useMutation({
+    mutationFn: async () => {
+      const response = await axios.delete(`/api/users/${id}`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
+
+
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey:["users"] })
+      toast.success('User deleted successfully')
+    },
+    onError: (error) => {
+      toast.error(error.message)
+    }
+  })
+
 
   return (
     <div key={id} className="bg-white shadow-md rounded p-4 justify-center space-y-3 dark:bg-gray-800">
@@ -21,8 +47,8 @@ export const Card = ({ firstName, lastName, id, status, email, dateOfBirth }: Ca
       </div>
       <div className="flex justify-end gap-3 ">
         <Button >Edit</Button>
-        <Button variant={ButtonVariant.Danger}>Delete</Button>
+        <Button variant={ButtonVariant.Danger} onClick={() => DeleteUser.mutate()}>Delete</Button>
       </div>
     </div>
   );
-};
+}

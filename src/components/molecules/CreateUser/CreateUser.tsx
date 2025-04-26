@@ -2,13 +2,40 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useController } from "react-hook-form";
 import { schema, UserData } from "./CreateUser.type";
 import { Button, ButtonVariant } from "../../atoms/Button";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
+import { useNavigate } from "react-router";
+import { useAuthStore } from "../../../stores/useAuthStore";
+import {toast} from "react-toastify";
 
 export const CreateUser = () => {
+    const nav = useNavigate();
+    const accessToken = useAuthStore((state) => state.accessToken);
+    const createUserMutation = useMutation({
+        mutationFn: async (newUser: UserData) => {
+            const response = await axios.post("/api/users", newUser, {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            });
+            return response.data;
+          },
+        onSuccess: () =>{
+            reset();
+            toast.success('User deleted successfully')
+            nav("/dashboard");
+        },
+        onError:(error) => {
+            console.log("failed to create user ",error);
+        } 
+    });
+
     const {
         register,
         handleSubmit,
         formState: { errors },
         control,
+        reset,
     } = useForm<UserData>({
         resolver: zodResolver(schema),
         defaultValues: {
@@ -25,7 +52,7 @@ export const CreateUser = () => {
     });
 
     const onSubmit = (data: UserData) => {
-        console.log(data);
+        createUserMutation.mutate(data);
     };
 
     return (
@@ -58,7 +85,7 @@ export const CreateUser = () => {
                         onChange={statusField.onChange}
                         onBlur={statusField.onBlur}
                         name={statusField.name}
-                        className="input"
+                       className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     >
                         <option value="Active">Active</option>
                         <option value="Locked">Locked</option>
@@ -67,8 +94,8 @@ export const CreateUser = () => {
                 </div>
 
                 <div className="flex justify-center">
-                    <Button variant={ButtonVariant.Primary_OUTLINE} type="submit">
-                        Submit
+                    <Button variant={ButtonVariant.Primary_OUTLINE} type="submit" disabled={createUserMutation.isPending}>
+                    {createUserMutation.isPending ? 'Submitting...' : 'Submit'}
                     </Button>
                 </div>
             </form>
