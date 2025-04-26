@@ -1,5 +1,5 @@
-import { Cardcontainer } from "../../organisms/Cardcontainer/Cardcontainer";
 import { Navbar } from "../../molecules/Navbar";
+import { Outlet } from "react-router";
 
 
 function Dashboard() {
@@ -7,7 +7,7 @@ function Dashboard() {
     return (
         <div>
             <Navbar />
-            <Cardcontainer />
+            <Outlet />
         </div>
     )
 }

@@ -4,7 +4,7 @@ import { useAuthStore } from "../stores/useAuthStore";
 
 const AuthRoute: React.FC<PropsWithChildren> = ({ children }) => {
     const accessToken = useAuthStore((state) => state.accessToken);
-    if (accessToken) return <Navigate to="/"></Navigate>;
+    if (accessToken) return <Navigate to="/dashboard"></Navigate>;
     return children;
 };
 

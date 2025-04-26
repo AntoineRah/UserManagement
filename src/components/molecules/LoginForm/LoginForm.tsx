@@ -65,7 +65,7 @@ export const LoginForm = () => {
       const result = await response.json();
 
       if (!response.ok || result.status !== 200) {
-        throw new Error(result.result?.message || "Login failed");
+        throw new Error(result.message || "Login failed");
       }
 
       useAuth.setAuthData(

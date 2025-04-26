@@ -1,6 +1,7 @@
 import { Button, ButtonVariant } from "../../atoms/Button";
 import { useAuthStore } from "../../../stores/useAuthStore";
 import { useThemeStore } from "../../../stores/themeStore/themeStore";
+import { Link } from "react-router";
 
 export const Navbar = () => {
   const logout = useAuthStore((state) => state.clearAuthData);
@@ -11,7 +12,9 @@ export const Navbar = () => {
     <div className="bg-primary dark:bg-gray-900 flex items-center justify-between p-2 transition-colors">
       <h1 className="text-white font-bold">User Management</h1>
       <div className="flex space-x-3 justify-center items-center">
-        <Button variant={ButtonVariant.Primary_OUTLINE}>Create User</Button>
+        <Link to="/dashboard/new">
+        <Button variant={ButtonVariant.Primary_OUTLINE} >Create User</Button>
+        </Link>
         <Button variant={ButtonVariant.Danger} onClick={logout}>
           Logout
         </Button>
