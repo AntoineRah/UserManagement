@@ -55,10 +55,10 @@ export const LoginForm = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          body: {
+          
             email: loginFormData.email,
             password: loginFormData.password,
-          },
+  
         }),
       });
 
@@ -79,6 +79,8 @@ export const LoginForm = () => {
       setLoading(false);
     }
   };
+
+
 
   return (
     <form
