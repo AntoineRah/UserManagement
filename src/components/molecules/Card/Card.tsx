@@ -4,12 +4,14 @@ import { useQueryClient, useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useAuthStore } from "../../../stores/useAuthStore";
+import { useNavigate } from "react-router";
 
 
 export const Card = ({ firstName, lastName, id, status, email, dateOfBirth }: CardProps) => {
   const accessToken = useAuthStore((state) => state.accessToken);
   const initials = `${(firstName?.[0] || '').toUpperCase()}${(lastName?.[0] || '').toUpperCase()}`;
   const queryClient = useQueryClient()
+  const nav = useNavigate();
   const DeleteUser = useMutation({
     mutationFn: async () => {
       const response = await axios.delete(`/api/users/${id}`, {
@@ -46,8 +48,8 @@ export const Card = ({ firstName, lastName, id, status, email, dateOfBirth }: Ca
         <p className="text-gray-500 text-sm">Date of Birth: {dateOfBirth}</p>
       </div>
       <div className="flex justify-end gap-3 ">
-        <Button >Edit</Button>
-        <Button variant={ButtonVariant.Danger} onClick={() => DeleteUser.mutate()}>Delete</Button>
+        <Button onClick={()=>nav(`/dashboard/edit/${id}`)}>Edit</Button>
+        <Button variant={ButtonVariant.Danger} disabled={DeleteUser.isPending} onClick={() => DeleteUser.mutate()}>Delete</Button>
       </div>
     </div>
   );

@@ -6,6 +6,7 @@ import { AuthRoute } from './routes/AuthRoute';
 import { ProtectedRoute } from './routes/ProtectedRoute';
 import { Cardcontainer } from './components/organisms/Cardcontainer';
 import { CreateUser } from './components/molecules/CreateUser';
+import { EditUser } from './components/molecules/EditUser';
 
 
 function App() {
@@ -16,8 +17,9 @@ function App() {
       <Route path='/login' element={<AuthRoute><Login /></AuthRoute>} />
       <Route path='/' element={<Navigate to="/dashboard" replace />} />
       <Route path='/dashboard' element={<ProtectedRoute><Dashboard /></ProtectedRoute>}>
-        <Route index element={<ProtectedRoute><Cardcontainer /></ProtectedRoute>} />
-        <Route path='new' element={<ProtectedRoute><CreateUser /></ProtectedRoute>} />
+        <Route index element={<Cardcontainer />} />
+        <Route path='new' element={<CreateUser />} />
+        <Route path='edit/:id' element={<EditUser/>} />
       </Route>
     </Routes>
   )
